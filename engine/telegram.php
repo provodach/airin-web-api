@@ -152,13 +152,17 @@ function telegramTrackVote($isClass, $chat, $login)
 
 function processCommand($commandline, $chat, $login)
 {
-	if ($commandline[0] != '/')
+	if ((int)$chat > 0 && $commandline[0] != '/')
 	{
 		sendMessage('Прости, но я понимаю только команды, которые начинаются с символа `/`. Например, /start.', $chat);
 		return; // not a command
 	}
 
 	$commandline = mb_substr($commandline, 1, NULL, 'UTF-8');
+
+	if (strpos($commandline, '@') > -1)
+		$commandline = mb_substr($commandline, 0, mb_strpos($commandline, '@', 0, 'UTF-8'), 'UTF-8');
+
 
 	if (strlen($commandline) == 0)
 	{
@@ -227,14 +231,6 @@ function processCommand($commandline, $chat, $login)
 			sendMessage('Няяши говорят няя и делают мурумур.', $chat);
 			break;
 
-		case 'passme' :
-			telegramAuth ($chat, $login, ($commands[1] == 'ext'));
-			break;
-
-		case 'forgetme' :
-			telegramDeauth ($chat, $login);
-			break;
-
 		case 'class'    :
 		case 'disclass' :
 			$isClass = ($commands[0] == 'class') ? 1 : -1;
@@ -251,29 +247,39 @@ function processCommand($commandline, $chat, $login)
 								$login, $chat), $chat);
 			break;
 
-		// TODO: /subscribe /unsubscribe 
-		case 'subscribe'   :
-		case 'unsubscribe' :
+	}
 
-			if (!isUserAdmin($login))
-				sendMessage('Ты пытаешься зайти туда, куда тебе нельзя. Откуда ты вообще узнал эту команду?', $chat);
-			else
-			{
-				$isSubscribed = ($commands[0] == 'subscribe') ? true : false;
-				$reply = ($isSubscribed)
-						? 'Теперь я буду присылать тебе голосовые сообщения пользователей.'
-						: 'Голосовые сообщения пользователей больше не будут приходить.';
+	if ((int)$chat > 0) {
+		switch ($commands[0]) {
+			case 'passme' :
+				telegramAuth ($chat, $login, ($commands[1] == 'ext'));
+				break;
 
-				setTgAdminSubscription($login, $isSubscribed, $chat);
-				sendMessage($reply, $chat);
-			}
+			case 'forgetme' :
+				telegramDeauth ($chat, $login);
+				break;
 
+			case 'subscribe'   :
+			case 'unsubscribe' :
+
+				if (!isUserAdmin($login))
+					sendMessage('Ты пытаешься зайти туда, куда тебе нельзя. Откуда ты вообще узнал эту команду?', $chat);
+				else
+				{
+					$isSubscribed = ($commands[0] == 'subscribe') ? true : false;
+					$reply = ($isSubscribed)
+							? 'Теперь я буду присылать тебе голосовые сообщения пользователей.'
+							: 'Голосовые сообщения пользователей больше не будут приходить.';
+
+					setTgAdminSubscription($login, $isSubscribed, $chat);
+					sendMessage($reply, $chat);
+				}
 
 			break;
 
-		default:
-			sendMessage('Я тебя не понимаю или такой команде меня ещё не обучили.', $chat);
-		break;
+			default:
+				sendMessage('Я тебя не понимаю или такой команде меня ещё не обучили.', $chat);
+		}
 	}
 }
 
