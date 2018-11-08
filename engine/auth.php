@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $external = (!empty($route[1]) && $route[1] == 'external') ? true : false;
 

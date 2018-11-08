@@ -152,6 +152,10 @@ function telegramTrackVote($isClass, $chat, $login)
 
 function processCommand($commandline, $chat, $login)
 {
+
+	if (empty(trim($commandline))) 
+		return;
+
 	if ((int)$chat > 0 && $commandline[0] != '/')
 	{
 		sendMessage('Прости, но я понимаю только команды, которые начинаются с символа `/`. Например, /start.', $chat);
@@ -162,13 +166,6 @@ function processCommand($commandline, $chat, $login)
 
 	if (strpos($commandline, '@') > -1)
 		$commandline = mb_substr($commandline, 0, mb_strpos($commandline, '@', 0, 'UTF-8'), 'UTF-8');
-
-
-	if (strlen($commandline) == 0)
-	{
-		sendMessage('Зачем посылать пустые команды? Наркоман что ли?', $chat);
-		return; // not a command
-	}
 
 	$commands = explode(' ', $commandline);
 
@@ -304,7 +301,7 @@ function processTelegram ()
 		if(isUserBanned ('tg_'.$user))
 			sendMessage('Прости, но стражники сочли тебя врагом нашего общества.', $chat);
 
-		if (!empty($message['voice']))
+		/*if (!empty($message['voice']))
 		{
 			sendMessage('Запись получила, сохраняю...', $chat, null, true);
 
@@ -333,7 +330,7 @@ function processTelegram ()
 
 			// TODO: Admins Audio Broadcast
 		}
-		else
+		else */
 			processCommand($message['text'], $chat, 'tg_'.$user);
 	}
 }
