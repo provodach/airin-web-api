@@ -188,12 +188,23 @@ function processCommand($commandline, $chat, $login)
 			break;
 
 		case 'track' :
-			$track = file_get_contents(CURRENT_TAG_FILE);
+			$track = trim(file_get_contents(CURRENT_TAG_FILE));
 
 			if (empty($track))
 				sendMessage('Ой, что-то не получилось. Моей силы не хватает, чтобы выяснить причину проблемы.', $chat);
-			else
-				sendMessage('Сейчас на радио: '.$track, $chat);
+			else {
+				$keyboardArray = Array(Array(Array(
+					'text' => 'Возгуглить трек',
+					'url'  => 'https://google.com/search?q='.urlencode($track)
+				)));
+
+				sendMessage("Сейчас на радио:\n`".$track.'`', $chat,
+					Array('reply_markup' => Array(
+							'inline_keyboard' => $keyboardArray
+						)
+					)
+				);
+			}
 			break;		
 
 		case 'streams':
