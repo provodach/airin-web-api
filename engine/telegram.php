@@ -86,7 +86,7 @@ function telegramAuth($chat, $login, $external = false)
 	{
 		$keyboardArray = Array(Array(Array(
 					'text' => 'Завершить авторизацию',
-					'url'  => 'https://api.https.cat/airin/authgram?code='.$code
+					'url'  => 'https://api.nay.su/airin/authgram?code='.$code
 				)));
 
 		sendMessage("Всё готово. Нажми на кнопку ниже чтобы завершить авторизацию.\n".

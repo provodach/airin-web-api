@@ -99,14 +99,6 @@ function processVkAuth()
 	
 	global $external;
 
-	// DIRTY HACK FOR ANDROID APP - SHOULD BE REMOVED
-	$redirect_uri = REDIRECT_URI;
-
-	if ($external)
-		$redirect_uri = str_replace('https.cat', 'nyan.pw', $redirect_uri);
-	// DIRTY HACK FOR ANDROID APP - SHOULD BE REMOVED
-
-
 	$res = request('https://oauth.vk.com/access_token?client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET.'&redirect_uri='.$redirect_uri.($external ? '/external' : '').'&code='.$code);
 	
 	$json = json_decode($res, true);
