@@ -99,7 +99,7 @@ function processVkAuth()
 	
 	global $external;
 
-	$res = request('https://oauth.vk.com/access_token?client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET.'&redirect_uri='.$redirect_uri.($external ? '/external' : '').'&code='.$code);
+	$res = request('https://oauth.vk.com/access_token?client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET.'&redirect_uri='.REDIRECT_URI.($external ? '/external' : '').'&code='.$code);
 	
 	$json = json_decode($res, true);
 	if (empty($json))
