@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__.'/kiara-auth.php';
 
 $external = (!empty($route[1]) && $route[1] == 'external') ? true : false;
 
 function finish ($status, $payload = '')
 {
+	kiara_finish($status, $payload);
 	global $external;
 	if ($status == 0)
 	{
@@ -34,7 +36,7 @@ function finish ($status, $payload = '')
 
 function request ($url)
 {	
-	error_log ($url);
+	// Never log OAuth URLs: they contain the client secret and authorization code.
 
 	$curl = curl_init();
 
@@ -83,6 +85,7 @@ function processIncomingLogin ($login)
 
 function processVkAuth()
 {
+	kiara_handle_external_request();
 	
 	if (!empty($_GET['error']))
 	{
