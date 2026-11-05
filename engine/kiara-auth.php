@@ -47,7 +47,7 @@ function kiara_callback_url($state, $ticket = null)
 
 function kiara_create_ticket($authToken, $challenge)
 {
-    if (!is_string($authToken) || !preg_match('/\A[a-f0-9]{32}\z/D', $authToken)) {
+    if (!is_string($authToken) || !preg_match('/\A[A-Za-z0-9]{64}\z/D', $authToken)) {
         throw new RuntimeException('Invalid internal token');
     }
     $dir = kiara_storage_dir();
